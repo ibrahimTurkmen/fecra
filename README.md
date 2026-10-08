@@ -31,6 +31,10 @@ Yerel adres: http://127.0.0.1:5173. Üretim derlemesi: `npm run build`. Derlenmi
 - Taslak stok ayırmaz. Onayda güncel kullanılabilir stok kontrol edilip rezervasyon yapılır. Sevkiyatta fiziksel stok ve rezervasyon birlikte düşer. İptalde rezervasyon çözülür. Sevk edilmiş sipariş iptal edilemez.
 - Dosya sınırı 5 MB / 5.000 satırdır. CSV'de virgül/noktalı virgül ayracı, tırnaklı değerler, UTF-8 BOM ve ondalık virgül desteklenir. XLSX'in ilk sayfası okunur; formüller hesaplanmaz. `.xls` desteklenmez. Başlıklar örnek dosyadaki gibi olmalıdır. Bir hatalı satır tüm aktarımı engeller. Onayda güncel rezervasyonlar tekrar doğrulanır. Yeni üründe pozitif satış fiyatı zorunludur.
 - Görevler stok eşiği, sipariş onayı/sevkiyatı ve dosya hatasıyla tetiklenir. Düşük stok görevi açıkken yinelenmez; stok düzelince tamamlanır. Fiyat kararları ilgili ekip bildirimlerini oluşturur.
+- Fiyat talebi yönetici görevi oluşturur; onay veya ret bu görevi tamamlar. Operasyon KPI'ı yalnızca açık Operasyon görevlerini sayar. Grafik toplamı seçilen 3/7 günlük dönemle birlikte değişir.
+- Aktarım adımları **Dosya seç → Kontrol et → Aktar** olarak gerçek işleme göre ilerler. Hatalı ve doğrulanmış dosyalar da aktarım geçmişinde durumlarıyla görünür. Başarılı aktarım aynı dosyanın açık veri kontrol görevini tamamlar.
+- Başlangıçta `fecra-urun-stok-maliyet-2026-10.xlsx` için 1, `fecra-urun-maliyet-kontrol-2026-10.csv` için 2 hatalı satırlı doğrulama senaryosu bulunur. Görev, geçmiş, bildirim ve aktivite kayıtları aynı doğrulama işlemlerinden üretilir.
+- Veri sürümü 2, ilk açılışta önceki sürümdeki FECRA öneki taşımayan dosya denemelerini bağlı görev/bildirim/geçmişleriyle temizler; mevcut ürün, fiyat, sipariş ve stok verilerini korur. Sonraki açılışlarda geçiş tekrarlanmaz. Başlangıç senaryosuna tamamen dönmek için reset kullanılabilir.
 - Desktop-only tasarım; 1440×900 önceliklidir. Mobil yerleşim geliştirilmemiştir.
 
 ## Entegrasyonlar
@@ -46,7 +50,7 @@ npm test
 npm run build
 ```
 
-Vitest kritik fiyat, rol, rezervasyon, sevkiyat, iptal, fiyat geçmişi, aktarım doğrulama, otomasyon, dashboard ve deterministik sıfırlama senaryolarını kapsar.
+48 Vitest testi kritik fiyat, rol, rezervasyon, sevkiyat, iptal, fiyat geçmişi, aktarım doğrulama, otomasyon, dashboard, para formatı, kalıcı veri temizliği ve deterministik sıfırlama senaryolarını kapsar. Tarayıcı testi 7 ekranı 1366, 1440 ve 1920 px genişlikte kontrol eder; gerçek XLSX, CSV/XLSX örnek indirme, adım ilerlemesi, deep-link, konsol ve işlem akışını doğrular.
 
 Yerel Vite sunucusu çalışırken gerçek tarayıcı/Excel testi:
 
